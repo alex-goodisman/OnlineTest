@@ -8,20 +8,20 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
-public class Harness
+public class Harness<S extends State>
 {
 	public static final int DEFAULT_WIDTH = 300;
 	public static final int DEFAULT_HEIGHT = 300;
 	public static final String DEFAULT_TITLE = "Test Game";
 	
 	private long window;
-	private State state;
+	private S state;
 	private GameExternalCallback callback;
 	
-	public Harness()
+	public Harness(S s)
 	{
 		window = -1;
-		state = new State();
+		state = s;
 		callback = new GameExternalCallback();
 	}
 	
@@ -45,9 +45,16 @@ public class Harness
 		
 		glfwSetKeyCallback(window, (window, key, scancode, mode, mods) ->
 		{
-			Action action = Action.decodeKeyPress(state, key, scancode, mode, mods);
-			if(action != null)
-				state.respond(action,callback);
+			double[] x = new double[1];
+			double[] y = new double[1];
+			
+			glfwGetCursorPos(window, x, y);
+			
+			x[0] = 2*x[0]/DEFAULT_WIDTH-1;
+			y[0] = -2*y[0]/DEFAULT_HEIGHT+1;
+			
+			Action a2 = new Action(Action.Type.KEY, key, mode, mods, x[0], y[0]);
+			state.respond(a2,callback);
 		});
 		
 		glfwSetMouseButtonCallback(window, (window,button,mode,mods) -> 
@@ -60,10 +67,8 @@ public class Harness
 			x[0] = 2*x[0]/DEFAULT_WIDTH-1;
 			y[0] = -2*y[0]/DEFAULT_HEIGHT+1;
 			
-			
-			Action action = Action.decodeMousePress(state, button,x[0],y[0],mode,mods);
-			if(action != null)
-				state.respond(action, callback);
+			Action a2 = new Action(Action.Type.MOUSE, button, mode, mods, x[0], y[0]);
+			state.respond(a2, callback);
 		});
 		
 		glfwSetCursorPosCallback(window, (window, x, y) ->
@@ -71,9 +76,8 @@ public class Harness
 			x = 2*x/DEFAULT_WIDTH-1;
 			y = -2*y/DEFAULT_HEIGHT+1;
 			
-			Action action = Action.decodeMouseMotion(state, x,y);
-			if(action != null)
-				state.respond(action, callback);
+			Action a2 = new Action(Action.Type.MOTION, -1, -1, 0, x, y);
+			state.respond(a2, callback);
 		});
 		
 		glfwMakeContextCurrent(window);
@@ -118,7 +122,7 @@ public class Harness
 	
 	public static void main(String[] args)
 	{
-		Harness test = new Harness();
+		Harness<TestGameState> test = new Harness<>(new TestGameState());
 		try
 		{
 			test.run();
