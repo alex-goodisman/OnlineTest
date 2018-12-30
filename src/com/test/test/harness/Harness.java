@@ -1,4 +1,4 @@
-package com.test.test;
+package com.test.test.harness;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -10,19 +10,21 @@ import org.lwjgl.opengl.GL;
 
 public class Harness<S extends State>
 {
-	public static final int DEFAULT_WIDTH = 300;
-	public static final int DEFAULT_HEIGHT = 300;
-	public static final String DEFAULT_TITLE = "Test Game";
-	
 	private long window;
 	private S state;
+	private int width;
+	private int height;
+	private String title;
 	private GameExternalCallback callback;
 	
-	public Harness(S s)
+	public Harness(S s, int width, int height, String title)
 	{
 		window = -1;
 		state = s;
 		callback = new GameExternalCallback();
+		this.width = width;
+		this.height = height;
+		this.title = title;
 	}
 	
 	public void run()
@@ -35,13 +37,13 @@ public class Harness<S extends State>
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 		
-		window = glfwCreateWindow(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_TITLE, NULL, NULL);
+		window = glfwCreateWindow(width, height, title, NULL, NULL);
 		
 		if (window == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 		
 		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		glfwSetWindowPos(window, (vidmode.width() - DEFAULT_WIDTH) / 2, (vidmode.height() - DEFAULT_HEIGHT) / 2);
+		glfwSetWindowPos(window, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
 		
 		glfwSetKeyCallback(window, (window, key, scancode, mode, mods) ->
 		{
@@ -50,8 +52,8 @@ public class Harness<S extends State>
 			
 			glfwGetCursorPos(window, x, y);
 			
-			x[0] = 2*x[0]/DEFAULT_WIDTH-1;
-			y[0] = -2*y[0]/DEFAULT_HEIGHT+1;
+			x[0] = 2*x[0]/width-1;
+			y[0] = -2*y[0]/height+1;
 			
 			Action a2 = new Action(Action.Type.KEY, key, mode, mods, x[0], y[0]);
 			state.respond(a2,callback);
@@ -64,8 +66,8 @@ public class Harness<S extends State>
 			
 			glfwGetCursorPos(window, x, y);
 			
-			x[0] = 2*x[0]/DEFAULT_WIDTH-1;
-			y[0] = -2*y[0]/DEFAULT_HEIGHT+1;
+			x[0] = 2*x[0]/width-1;
+			y[0] = -2*y[0]/height+1;
 			
 			Action a2 = new Action(Action.Type.MOUSE, button, mode, mods, x[0], y[0]);
 			state.respond(a2, callback);
@@ -73,8 +75,8 @@ public class Harness<S extends State>
 		
 		glfwSetCursorPosCallback(window, (window, x, y) ->
 		{
-			x = 2*x/DEFAULT_WIDTH-1;
-			y = -2*y/DEFAULT_HEIGHT+1;
+			x = 2*x/width-1;
+			y = -2*y/height+1;
 			
 			Action a2 = new Action(Action.Type.MOTION, -1, -1, 0, x, y);
 			state.respond(a2, callback);
@@ -95,7 +97,7 @@ public class Harness<S extends State>
 			
 	}
 	
-	private void cleanup()
+	public void cleanup()
 	{
 		if(window > 0)
 		{
@@ -117,19 +119,6 @@ public class Harness<S extends State>
 		public void closeWindow()
 		{
 			glfwSetWindowShouldClose(window, true);
-		}
-	}
-	
-	public static void main(String[] args)
-	{
-		Harness<TestGameState> test = new Harness<>(new TestGameState());
-		try
-		{
-			test.run();
-		}
-		finally
-		{
-			test.cleanup();
 		}
 	}
 }
