@@ -159,7 +159,17 @@ public class MineState implements State
 		open++;
 		
 		if(board[i][j].mine)
+		{
 			done = -1;
+			for(int k = 0; k < SIZE; k++)
+			{
+				for(int l = 0; l < SIZE; l++)
+				{
+					if(board[k][l].mine)
+						board[k][l].clicked = true;
+				}
+			}
+		}
 		else if(board[i][j].adjacent == 0)
 		{
 			propagate(i-1,j);
