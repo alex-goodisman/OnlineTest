@@ -17,6 +17,10 @@ public class Harness<S extends State>
 	private String title;
 	private GameExternalCallback callback;
 	
+	private long timeSinceLastUpdate;
+	private long updateStamp;
+	private static final long MIN_TICK_LENGTH = 0;
+	
 	public Harness(S s, int width, int height, String title)
 	{
 		window = -1;
@@ -87,12 +91,26 @@ public class Harness<S extends State>
 		glfwShowWindow(window);
 		GL.createCapabilities();
 		
+		timeSinceLastUpdate = 0;
 		while (!glfwWindowShouldClose(window))
 		{
-			state.update();
+			updateStamp = System.nanoTime();
+			state.update(timeSinceLastUpdate);
 			state.render();
 			glfwSwapBuffers(window);
 			glfwPollEvents();
+			
+			timeSinceLastUpdate = System.nanoTime() - updateStamp;
+			if (timeSinceLastUpdate < MIN_TICK_LENGTH)
+			{
+				try {
+					Thread.sleep(0, (int)(MIN_TICK_LENGTH - timeSinceLastUpdate));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				timeSinceLastUpdate = MIN_TICK_LENGTH;
+			}
+			
 		}
 			
 	}

@@ -87,7 +87,7 @@ public class MineState implements State
 		reset();
 	}
 	
-	public void update()
+	public void update(long timeSinceLastUpdate)
 	{
 	}
 	

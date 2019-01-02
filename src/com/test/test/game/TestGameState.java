@@ -39,7 +39,7 @@ public class TestGameState implements State
 	protected boolean running = true;
 	protected boolean grabbed = false;
 	
-	public void update()
+	public void update(long timeSinceLastUpdate)
 	{
 		x += vx;
 		y += vy;
