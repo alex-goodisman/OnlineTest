@@ -5,7 +5,9 @@ import static org.lwjgl.opengl.GL11.GL_LINES;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glColor3f;
+
 
 public class Tile 
 {
@@ -66,13 +68,34 @@ public class Tile
 				glEnd();
 			}
 			else
+			{
+				glColor3f(0f,1f,0f);
 				drawNumber(adjacent);
+			}
 		}
 	}
 	
-	private static void drawNumber(int number)
+	public static void drawNumber(int number)
 	{
-		glColor3f(0f,1f,0f);
+		if(number < 0)
+		{
+			drawNumber(-number);
+			glTranslatef(-2f,0f,0f);
+			glBegin(GL_LINES);
+			glVertex3f(-0.8f,0f,0f);
+			glVertex3f(0.8f,0f,0f);
+			glEnd();
+			return;
+		}
+		
+		if(number > 9)
+		{
+			drawNumber(number % 10);
+			glTranslatef(-2f,0f,0f);
+			drawNumber(number / 10);
+			return;
+		}
+		
 		glBegin(GL_LINES);
 		
 		switch(number)
@@ -184,6 +207,24 @@ public class Tile
 				
 				glVertex3f(-0.8f, -0.8f, 0.0f);
 				glVertex3f(0.8f, -0.8f, 0.0f);
+				break;
+			case 9:
+				glVertex3f(-0.8f, 0.8f, 0.0f);
+				glVertex3f(0.8f, 0.8f, 0.0f);
+				
+				glVertex3f(-0.8f, 0.8f, 0.0f);
+				glVertex3f(-0.8f, 0f, 0.0f);
+				
+				glVertex3f(0.8f, 0f, 0.0f);
+				glVertex3f(-0.8f, 0f, 0.0f);
+				
+
+				glVertex3f(0.8f, 0.8f, 0.0f);
+				glVertex3f(0.8f, -0.8f, 0.0f);
+				
+				glVertex3f(-0.8f, -0.8f, 0.0f);
+				glVertex3f(0.8f, -0.8f, 0.0f);
+				break;
 				
 				
 		}

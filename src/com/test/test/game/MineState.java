@@ -22,9 +22,13 @@ public class MineState implements State
 	
 	Tile[][] board;
 	
-	int open = 0;
+	int open;
 	
-	int done = 0;
+	int done;
+	
+	long time;
+	
+	int mines;
 	
 	private int isMine(int i, int j)
 	{
@@ -80,6 +84,8 @@ public class MineState implements State
 		}
 		open = 0;
 		done = 0;
+		time = 0;
+		mines = MINES;
 	}
 	
 	public MineState()
@@ -87,8 +93,13 @@ public class MineState implements State
 		reset();
 	}
 	
-	public void update(long timeSinceLastUpdate)
+	public void update(long dt)
 	{
+		if(done != 0)
+			return;
+		time += dt;
+		if(time > 999 * 1000000000L)
+			time = 999 * 1000000000L;
 	}
 	
 	public void respond(Action a, HarnessCallback operations)
@@ -130,6 +141,7 @@ public class MineState implements State
 											board[k][l].flag = true;
 									}
 								}
+								mines = 0;
 							}					
 					}
 					else if(a.value == GLFW_MOUSE_BUTTON_RIGHT && a.mode == GLFW_RELEASE)
@@ -138,7 +150,13 @@ public class MineState implements State
 						int j = (int)((a.y+1)*SIZE/2);
 								
 						if(!board[i][j].clicked)
+						{
+							if(board[i][j].flag)
+								mines++;
+							else
+								mines--;
 							board[i][j].flag = !board[i][j].flag;
+						}
 					}
 				}
 				break;
@@ -292,6 +310,28 @@ public class MineState implements State
 				glPopMatrix();
 			}
 		}
+		
+		glPopMatrix();
+		
+		glPushMatrix();
+		
+		glTranslatef(0.8f,0.8f,0f);
+		glScalef(0.13f,0.13f,1f);
+		
+		glColor3f(1f,0f,0f);
+		
+		Tile.drawNumber((int)(time / 1000000000L));
+		
+		glPopMatrix();
+		
+		glPushMatrix();
+		
+		glTranslatef(-0.4f,0.8f,0f);
+		glScalef(0.13f,0.13f,1f);
+		
+		glColor3f(1f,0f,0f);
+		
+		Tile.drawNumber(mines);
 		
 		glPopMatrix();
 	}

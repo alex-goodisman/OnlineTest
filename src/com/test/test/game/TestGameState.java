@@ -39,15 +39,15 @@ public class TestGameState implements State
 	protected boolean running = true;
 	protected boolean grabbed = false;
 	
-	public void update(long timeSinceLastUpdate)
+	public void update(long dt)
 	{
-		x += vx*timeSinceLastUpdate/1000000000L;
-		y += vy*timeSinceLastUpdate/1000000000L;
+		x += vx*dt/1000000000L;
+		y += vy*dt/1000000000L;
 		
 		if(!running || grabbed) //don't grow
 			return;
 		
-		sp = sp + 0.5f*timeSinceLastUpdate/1000000000L; //grow
+		sp = sp + 0.5f*dt/1000000000L; //grow
 		if (x+sp > 1 && x-sp < -1 && y+sp > 1 && y-sp < -1) //if full screen, swap color
 		{
 			sp = 0.0f;
