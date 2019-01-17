@@ -1,6 +1,7 @@
 package com.test.test.game;
 
 import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_LINES;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glEnd;
@@ -41,8 +42,14 @@ public class Tile
 		{
 			glColor3f(0f, 0f, 1f);
 			glBegin(GL_LINES);
-			glVertex3f(0.0f, -1f, 0.0f);
-			glVertex3f(0.0f, 1f, 0.0f);
+			glVertex3f(0.0f, -0.8f, 0.0f);
+			glVertex3f(0.0f, 0.8f, 0.0f);
+			glEnd();
+			glColor3f(1f,0f,0f);
+			glBegin(GL_TRIANGLES);
+			glVertex3f(-0.03f,0.8f,0.0f);
+			glVertex3f(-0.46f,0.4f,0.0f);
+			glVertex3f(-0.03f,0f,0.0f);
 			glEnd();
 		}
 		

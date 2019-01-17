@@ -174,7 +174,6 @@ public class MineState implements State
 			return;
 		
 		board[i][j].clicked = true;
-		open++;
 		
 		if(board[i][j].mine)
 		{
@@ -188,13 +187,18 @@ public class MineState implements State
 				}
 			}
 		}
-		else if(board[i][j].adjacent == 0)
+		else 
 		{
-			propagate(i-1,j);
-			propagate(i,j+1);
-			propagate(i+1,j);
-			propagate(i,j-1);
+			open++;
+			if(board[i][j].adjacent == 0)
+			{
+				propagate(i-1,j);
+				propagate(i,j+1);
+				propagate(i+1,j);
+				propagate(i,j-1);
+			}
 		}
+		
 			
 	}
 	
