@@ -125,8 +125,28 @@ public class MineState implements State
 					a.y = (a.y+1)*2/1.6-1;
 					if(a.value == GLFW_MOUSE_BUTTON_LEFT && a.mode == GLFW_RELEASE)
 					{
+						
 							int i = (int)((a.x+1)*SIZE/2);
 							int j = (int)((a.y+1)*SIZE/2);
+							
+							if(open == 0 &&board[i][j].mine)
+							{
+								int c = 0;
+								int d = 0;
+								locate:
+								for(c = 0; c < SIZE; c++)
+								{
+									for(d = 0; d < SIZE; d++)
+									{
+										if(!board[c][d].mine)
+											break locate;
+									}
+								}
+								board[c][d].mine = true;
+								board[i][j].mine = false;
+							}
+								
+							
 							
 							propagate(i,j);
 							
@@ -192,9 +212,13 @@ public class MineState implements State
 			open++;
 			if(board[i][j].adjacent == 0)
 			{
+				propagate(i-1,j-1);
 				propagate(i-1,j);
+				propagate(i-1,j+1);
 				propagate(i,j+1);
+				propagate(i+1,j+1);
 				propagate(i+1,j);
+				propagate(i+1,j-1);
 				propagate(i,j-1);
 			}
 		}
