@@ -39,15 +39,15 @@ public class TestGameState implements State
 	protected boolean running = true;
 	protected boolean grabbed = false;
 	
-	public void update(long timeSinceLastUpdate)
+	public void update(long dt)
 	{
-		x += vx;
-		y += vy;
+		x += vx*dt/1000000000L;
+		y += vy*dt/1000000000L;
 		
 		if(!running || grabbed) //don't grow
 			return;
 		
-		sp = sp + 0.005f; //grow
+		sp = sp + 0.5f*dt/1000000000L; //grow
 		if (x+sp > 1 && x-sp < -1 && y+sp > 1 && y-sp < -1) //if full screen, swap color
 		{
 			sp = 0.0f;
@@ -71,16 +71,16 @@ public class TestGameState implements State
 							running = !running;
 							break;
 						case GLFW_KEY_RIGHT: //adjust speed for held down key
-							vx += 0.03f;
+							vx += 2f;
 							break;
 						case GLFW_KEY_LEFT:
-							vx -= 0.03f;
+							vx -= 2f;
 							break;
 						case GLFW_KEY_UP:
-							vy += 0.03f;
+							vy += 2f;
 							break;
 						case GLFW_KEY_DOWN:
-							vy -= 0.03f;
+							vy -= 2f;
 							break;
 					}
 				}
@@ -89,16 +89,16 @@ public class TestGameState implements State
 					switch(a.value)
 					{
 						case GLFW_KEY_RIGHT: //adjust speed for released key
-							vx -= 0.03f;
+							vx -= 2f;
 							break;
 						case GLFW_KEY_LEFT:
-							vx += 0.03f;
+							vx += 2f;
 							break;
 						case GLFW_KEY_UP:
-							vy -= 0.03f;
+							vy -= 2f;
 							break;
 						case GLFW_KEY_DOWN:
-							vy += 0.03f;
+							vy += 2f;
 							break;
 					}
 				}
