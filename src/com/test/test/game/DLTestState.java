@@ -44,13 +44,13 @@ public class DLTestState implements State {
 		
 		glBegin(GL_QUADS);
         	glTexCoord2f(0, 0);
-        	glVertex2f(0, 0);
-        	glTexCoord2f(testImage.width, 0);
-        	glVertex2f(testImage.width, 0);
-        	glTexCoord2f(testImage.width, testImage.height);
-        	glVertex2f(testImage.width, testImage.height);
-        	glTexCoord2f(0, testImage.height);
-        	glVertex2f(0, testImage.height);
+        	glVertex2f(-1, -1);
+        	glTexCoord2f(1, 0);
+        	glVertex2f(1, -1);
+        	glTexCoord2f(1, 1);
+        	glVertex2f(1, 1);
+        	glTexCoord2f(0, 1);
+        	glVertex2f(-1, 1);
         glEnd();
         
 		
