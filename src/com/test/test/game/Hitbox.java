@@ -2,7 +2,7 @@ package com.test.test.game;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class Hitbox 
+public class Hitbox //drawing rectangle from xywh
 {
 	public float x;
 	public float y;
