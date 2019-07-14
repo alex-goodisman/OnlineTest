@@ -17,6 +17,7 @@ public class Main
 		finally
 		{
 			test.cleanup();
+			
 		}
 	}
 }
